@@ -84,10 +84,10 @@ namespace Nl2TrackGen.ViewModels
         public ICommand ExportCommand { get; }
         public ICommand RandomSeedCommand { get; }
 
-        private List<TrackPoint> _currentPoints;
+        private List<TrackPoint> _currentPoints = new();
 
         // WebView Interaction
-        public event EventHandler<string> WebViewMessageRequested;
+        public event EventHandler<string>? WebViewMessageRequested;
 
         public MainViewModel(Window window)
         {
@@ -187,8 +187,8 @@ namespace Nl2TrackGen.ViewModels
             WebViewMessageRequested?.Invoke(this, json);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
@@ -199,15 +199,15 @@ namespace Nl2TrackGen.ViewModels
         public TrackElementType Type { get; set; }
         private bool _isSelected;
         public bool IsSelected { get => _isSelected; set { _isSelected = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsSelected))); } }
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
     }
 
     public class RelayCommand : ICommand
     {
         private readonly Action _execute;
         public RelayCommand(Action execute) => _execute = execute;
-        public event EventHandler CanExecuteChanged;
-        public bool CanExecute(object parameter) => true;
-        public void Execute(object parameter) => _execute();
+        public event EventHandler? CanExecuteChanged;
+        public bool CanExecute(object? parameter) => true;
+        public void Execute(object? parameter) => _execute();
     }
 }
