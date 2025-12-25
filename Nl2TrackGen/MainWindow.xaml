@@ -1,0 +1,79 @@
+<Window
+    x:Class="Nl2TrackGen.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:Nl2TrackGen.Models"
+    xmlns:viewmodels="using:Nl2TrackGen.ViewModels"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left Column: Controls -->
+        <ScrollViewer Grid.Column="0" Padding="12">
+            <StackPanel Spacing="10">
+                <TextBlock Text="Nl2TrackGen" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Coaster Type"/>
+                <ComboBox ItemsSource="{x:Bind ViewModel.SelectedCoasterType, Mode=OneWay}"
+                          SelectedItem="{x:Bind ViewModel.SelectedCoasterType, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch"/>
+
+                <ToggleSwitch Header="NL2 Preset (Safe Import)"
+                              IsOn="{x:Bind ViewModel.IsNl2Preset, Mode=TwoWay}"/>
+
+                <TextBlock Text="Sample Step (m)" />
+                <NumberBox Value="{x:Bind ViewModel.SampleStep, Mode=TwoWay}"
+                           IsEnabled="{x:Bind ViewModel.IsSampleStepEnabled, Mode=OneWay}"
+                           Minimum="0.1" Maximum="10.0" SpinButtonPlacementMode="Inline"/>
+
+                <TextBlock Text="Elements" Margin="0,10,0,0"/>
+                <ItemsControl ItemsSource="{x:Bind ViewModel.ElementOptions}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="viewmodels:ElementSelection">
+                            <CheckBox Content="{x:Bind Type}" IsChecked="{x:Bind IsSelected, Mode=TwoWay}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <NumberBox Header="Seed" Value="{x:Bind ViewModel.Seed, Mode=TwoWay}" Grid.Column="0"/>
+                    <Button Content="Rnd" Command="{x:Bind ViewModel.RandomSeedCommand}" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                </Grid>
+
+                <NumberBox Header="Target Length (m)" Value="{x:Bind ViewModel.TargetLength, Mode=TwoWay}" Minimum="100"/>
+
+                <TextBlock Text="Intensity"/>
+                <Slider Value="{x:Bind ViewModel.Intensity, Mode=TwoWay}" Minimum="0" Maximum="1" StepFrequency="0.1"/>
+
+                <Button Content="Generate" Command="{x:Bind ViewModel.GenerateCommand}" HorizontalAlignment="Stretch" Style="{StaticResource AccentButtonStyle}"/>
+                <Button Content="Export CSV" Command="{x:Bind ViewModel.ExportCommand}" HorizontalAlignment="Stretch"/>
+
+                <TextBlock Text="{x:Bind ViewModel.StatusText, Mode=OneWay}" TextWrapping="Wrap" Foreground="Gray" Margin="0,10,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Right Column: Preview -->
+        <Grid Grid.Column="1" Background="#222">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <WebView2 x:Name="PreviewWebView" Grid.Row="0"/>
+
+            <Border Grid.Row="1" Background="#333" Padding="10">
+                <TextBlock Text="{x:Bind ViewModel.StatsText, Mode=OneWay}" Foreground="White" FontFamily="Consolas"/>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
